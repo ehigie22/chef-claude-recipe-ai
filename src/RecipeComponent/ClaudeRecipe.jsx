@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useRef } from "react"
 import OpenAI from "openai"
 
 const client = new OpenAI({
@@ -9,6 +9,7 @@ const client = new OpenAI({
 function ClaudeRecipe({ ingredients }) {
     const [recipe, setRecipe] = useState("")
     const [loading, setLoading] = useState(true)
+    const recipeSection = useRef(null)
 
     useEffect(() => {
         async function getRecipe() {
@@ -43,8 +44,16 @@ function ClaudeRecipe({ ingredients }) {
         getRecipe()
     }, [ingredients])
 
+     useEffect(() => {
+        if (recipe !== "" && recipeSection.current !== null) {
+            recipeSection.current.scrollIntoView({behavior: "smooth"})
+        }
+    }, [recipe])
+
+
+
     return (
-        <section className="recipe-section">
+        <section className="recipe-section" ref={recipeSection}>
             <h2 className="recipe-header">Chef Claude Recommends: </h2>
             {loading ? (
                 <p className="loading-text">Generating your recipe...</p>
